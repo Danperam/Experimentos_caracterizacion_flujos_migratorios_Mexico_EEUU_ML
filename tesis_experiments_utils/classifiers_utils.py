@@ -6,6 +6,7 @@
 # Julio 2024
 
 import os
+import time
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
@@ -16,6 +17,7 @@ from tesis_experiments_utils.files_utils import (
     write_results_to_file,
     write_results_to_file_multiclass,
     write_predictions_to_file,
+    write_execution_times_to_file,
 )
 
 from sklearn.metrics import (
@@ -67,10 +69,27 @@ def train_and_evaluate_model(
     y_true, y_pred = list(), list()
 
     # Entrenar modelo
+    start = time.time()
     modelo.fit(X_train, y_train)
+    end = time.time()
+    training_time = end - start
+    # hh, mm, ss, ms = measure_elapsed_time(start, end)
+    # print(f"Tiempo de entrenamiento: {hh:.0f}:{mm:.0f}:{ss:.0f}.{ms:.0f}")
+    print(
+        "Tiempo de entrenamiento: "
+        + time.strftime("%H:%M:%S", time.gmtime(training_time))
+    )
 
     # Evaluar modelo
+    start = time.time()
     y_eval = modelo.predict(X_test)
+    end = time.time()
+    testing_time = end - start
+    # hh, mm, ss, ms = measure_elapsed_time(start, end)
+    # print(f"Tiempo de evaluación: {hh:.0f}:{mm:.0f}:{ss:.0f}.{ms:.0f}")
+    print(
+        "Tiempo de evaluación: " + time.strftime("%H:%M:%S", time.gmtime(testing_time))
+    )
 
     # store
     y_true.extend(y_test)
@@ -114,6 +133,10 @@ def train_and_evaluate_model(
         {"Classifier": nombre, "y_true": y_true, "y_pred": y_pred}
     )
 
+    write_execution_times_to_file(
+        {"Classifier": nombre, "training_s": training_time, "testing_s": testing_time}
+    )
+
     # predicciones["Classifier"].append(nombre)
     # predicciones["y_true"].append(y_true)
     # predicciones["y_pred"].append(y_pred)
@@ -135,142 +158,175 @@ def train_and_evaluate_model(
         nombre,
     )
 
+
 def train_and_evaluate_model_multiclass(
-            modelo, X_train, y_train, X_test, y_test, nombre, classes
+    modelo, X_train, y_train, X_test, y_test, nombre, classes
 ):
     """Función para entrenar y evaluar un clasificador en un problema multiclase"""
-    #cu.train_and_evaluate_model(knn, X_train_scaled, y_train, X_test_scaled, y_test, f'{best_k}-NN',pos_class,neg_classes)
+    # cu.train_and_evaluate_model(knn, X_train_scaled, y_train, X_test_scaled, y_test, f'{best_k}-NN',pos_class,neg_classes)
     y_true, y_pred = list(), list()
 
-        # Entrenar modelo
+    # Entrenar modelo
+    start = time.time()
     modelo.fit(X_train, y_train)
+    end = time.time()
+    training_time = end - start
+    # hh, mm, ss, ms = measure_elapsed_time(start, end)
+    # print(f"Tiempo de entrenamiento: {hh:.0f}:{mm:.0f}:{ss:.0f}.{ms:.0f}")
+    print(
+        "Tiempo de entrenamiento: "
+        + time.strftime("%H:%M:%S", time.gmtime(training_time))
+    )
 
     # Evaluar modelo
+    start = time.time()
     y_eval = modelo.predict(X_test)
+    end = time.time()
+    testing_time = end - start
+    # hh, mm, ss, ms = measure_elapsed_time(start, end)
+    print("Tiempo de prueba: " + time.strftime("%H:%M:%S", time.gmtime(testing_time)))
+
+    write_execution_times_to_file(
+        {"Classifier": nombre, "training_s": training_time, "testing_s": testing_time}
+    )
 
     # store
     y_true.extend(y_test)
     y_pred.extend(y_eval)
 
-    #Matriz de confusión
-    #Columnas: Etiquetas predichas
-    #Filas: Etiquetas reales
-    #cm[etiqueta_real][etiqueta_predicha]
+    # Matriz de confusión
+    # Columnas: Etiquetas predichas
+    # Filas: Etiquetas reales
+    # cm[etiqueta_real][etiqueta_predicha]
 
     cm = confusion_matrix(y_true, y_pred, labels=[c[0] for c in classes].sort())
 
-    cm = pd.DataFrame(cm, columns=[c[0] for c in classes].sort(), index=[c[0] for c in classes].sort())
+    cm = pd.DataFrame(
+        cm, columns=[c[0] for c in classes].sort(), index=[c[0] for c in classes].sort()
+    )
 
     performance = {}
     performancedf = pd.DataFrame()
 
-    #Cálculo de medidas de desempeño
-    for c in classes: #Para cada clase
-        pos_class = c #Clase positive
-        performance['clasificador'] = nombre
-        neg_classes = [c for c in classes if c != pos_class] #Clases negative
-        
-        performance['clase'] = pos_class[1]
-        
-        #True Positives: Patrones de la clase positive clasificados como positive
-        #cm[positive_class][positive_class]
+    # Cálculo de medidas de desempeño
+    for c in classes:  # Para cada clase
+        pos_class = c  # Clase positive
+        performance["Classifier"] = nombre
+        neg_classes = [c for c in classes if c != pos_class]  # Clases negative
+
+        performance["clase"] = pos_class[1]
+
+        # True Positives: Patrones de la clase positive clasificados como positive
+        # cm[positive_class][positive_class]
         tp = cm[pos_class[0]][pos_class[0]]
 
-        #True Negatives: Suma de los atrones de las clases negative clasificados como negative
-        #cm[negative_class][negative_class]
+        # True Negatives: Suma de los atrones de las clases negative clasificados como negative
+        # cm[negative_class][negative_class]
         tn = sum([cm[c[0]][c[0]] for c in neg_classes])
 
-        #False Positives: Patrones de las clases negative clasificados como positive
-        #cm[negative_class][positive_class]
+        # False Positives: Patrones de las clases negative clasificados como positive
+        # cm[negative_class][positive_class]
         fp = sum([cm[pos_class[0]][c[0]] for c in neg_classes])
 
-        #False Negatives: Patrones de la clase positive clasificados como negative
-        #cm[positive_class][negative_class]
+        # False Negatives: Patrones de la clase positive clasificados como negative
+        # cm[positive_class][negative_class]
         fn = sum([cm[c[0]][pos_class[0]] for c in neg_classes])
 
         acc = accuracy_score(y_true, y_pred)
         b_acc = balanced_accuracy_score(y_true, y_pred)
-        #recall_score devuelve un array cuando average=None
+        # recall_score devuelve un array cuando average=None
         rec = recall_score(y_true, y_pred, labels=[pos_class[0]], average=None)[0]
-        #f1_score devuelve un array cuando average=None
+        # f1_score devuelve un array cuando average=None
         f1 = f1_score(y_true, y_pred, labels=[pos_class[0]], average=None)[0]
-        mcc = (tp * tn - fp * fn) / np.sqrt((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn))
+        mcc = (tp * tn - fp * fn) / np.sqrt(
+            (tp + fp) * (tp + fn) * (tn + fp) * (tn + fn)
+        )
 
-        performance['accuracy'] = acc
-        performance['balanced_accuracy'] = b_acc
-        performance['sensitivity'] = rec
-        performance['specificity'] = tn / (fp + tn)
-        performance['f1'] = f1
-        performance['mcc'] = mcc
+        performance["accuracy"] = acc
+        performance["balanced_accuracy"] = b_acc
+        performance["sensitivity"] = rec
+        performance["specificity"] = tn / (fp + tn)
+        performance["f1"] = f1
+        performance["mcc"] = mcc
 
         performancedf = pd.concat([performancedf, pd.DataFrame(performance, index=[0])])
 
         write_results_to_file_multiclass(
             {
-                "clasificador": nombre,
+                "Classifier": nombre,
                 "clase": pos_class[1],
                 "accuracy": acc,
                 "balanced_accuracy": b_acc,
                 "sensitivity": rec,
                 "specificity": tn / (fp + tn),
                 "f1": f1,
-                "mcc": mcc
+                "mcc": mcc,
             }
         )
 
-    #Cálculo de macro avg para cada medida de desempeño
+    # Cálculo de macro avg para cada medida de desempeño
     macros = {}
-    macros['clasificador'] = nombre
-    macros['clase'] = 'macro_avg'
-    macros['accuracy'] = sum(performancedf['accuracy']) / len(classes)
-    macros['balanced_accuracy'] = sum(performancedf['balanced_accuracy']) / len(classes)
-    macros['sensitivity'] = sum(performancedf['sensitivity']) / len(classes)
-    macros['specificity'] = sum(performancedf['specificity']) / len(classes)
-    macros['f1'] = sum(performancedf['f1']) / len(classes)
-    macros['mcc'] = sum(performancedf['mcc']) / len(classes)
+    macros["Classifier"] = nombre
+    macros["clase"] = "macro_avg"
+    macros["accuracy"] = sum(performancedf["accuracy"]) / len(classes)
+    macros["balanced_accuracy"] = sum(performancedf["balanced_accuracy"]) / len(classes)
+    macros["sensitivity"] = sum(performancedf["sensitivity"]) / len(classes)
+    macros["specificity"] = sum(performancedf["specificity"]) / len(classes)
+    macros["f1"] = sum(performancedf["f1"]) / len(classes)
+    macros["mcc"] = sum(performancedf["mcc"]) / len(classes)
 
-    #clasificador,clase,accuracy,balanced_accuracy,sensitivity,specificity,f1,mcc
+    # clasificador,clase,accuracy,balanced_accuracy,sensitivity,specificity,f1,mcc
     write_results_to_file_multiclass(
-         {
-            "clasificador": nombre,
-            "clase": 'macro_avg',
-            "accuracy": macros['accuracy'],
-            "balanced_accuracy": macros['balanced_accuracy'],
-            "sensitivity": macros['sensitivity'],
-            "specificity": macros['specificity'],
-            "f1": macros['f1'],
-            "mcc": macros['mcc']
+        {
+            "Classifier": nombre,
+            "clase": "macro_avg",
+            "accuracy": macros["accuracy"],
+            "balanced_accuracy": macros["balanced_accuracy"],
+            "sensitivity": macros["sensitivity"],
+            "specificity": macros["specificity"],
+            "f1": macros["f1"],
+            "mcc": macros["mcc"],
         }
     )
 
-    #Cálculo de weighted avg para cada medida de desempeño
+    # Cálculo de weighted avg para cada medida de desempeño
     weighted = {}
-    proporciones = [sum(1 for l in y_true if l == c[0])/len(y_true) for c in classes] #Proporción de cada clase en el dataset de prueba
-    weighted['clasificador'] = nombre
-    weighted['clase'] = 'weighted_avg'
-    weighted['accuracy'] = sum(performancedf['accuracy'] * proporciones)
-    weighted['balanced_accuracy'] = sum(performancedf['balanced_accuracy'] * proporciones)
-    weighted['sensitivity'] = sum(performancedf['sensitivity'] * proporciones)
-    weighted['specificity'] = sum(performancedf['specificity'] * proporciones)
-    weighted['f1'] = sum(performancedf['f1'] * proporciones)
-    weighted['mcc'] = sum(performancedf['mcc'] * proporciones)
+    proporciones = [
+        sum(1 for l in y_true if l == c[0]) / len(y_true) for c in classes
+    ]  # Proporción de cada clase en el dataset de prueba
+    weighted["Classifier"] = nombre
+    weighted["clase"] = "weighted_avg"
+    weighted["accuracy"] = sum(performancedf["accuracy"] * proporciones)
+    weighted["balanced_accuracy"] = sum(
+        performancedf["balanced_accuracy"] * proporciones
+    )
+    weighted["sensitivity"] = sum(performancedf["sensitivity"] * proporciones)
+    weighted["specificity"] = sum(performancedf["specificity"] * proporciones)
+    weighted["f1"] = sum(performancedf["f1"] * proporciones)
+    weighted["mcc"] = sum(performancedf["mcc"] * proporciones)
 
     write_results_to_file_multiclass(
-         {
-            "clasificador": nombre,
-            "clase": 'weighted_avg',
-            "accuracy": weighted['accuracy'],
-            "balanced_accuracy": weighted['balanced_accuracy'],
-            "sensitivity": weighted['sensitivity'],
-            "specificity": weighted['specificity'],
-            "f1": weighted['f1'],
-            "mcc": weighted['mcc']
+        {
+            "Classifier": nombre,
+            "clase": "weighted_avg",
+            "accuracy": weighted["accuracy"],
+            "balanced_accuracy": weighted["balanced_accuracy"],
+            "sensitivity": weighted["sensitivity"],
+            "specificity": weighted["specificity"],
+            "f1": weighted["f1"],
+            "mcc": weighted["mcc"],
         }
     )
 
-    performancedf = pd.concat([performancedf, pd.DataFrame(macros,index=[0]) ,pd.DataFrame(weighted, index=[0])])
-    print(performancedf.drop(columns=['clasificador']))
-    
+    performancedf = pd.concat(
+        [
+            performancedf,
+            pd.DataFrame(macros, index=[0]),
+            pd.DataFrame(weighted, index=[0]),
+        ]
+    )
+    print(performancedf.drop(columns=["Classifier"]))
+
     plot_save_conf_matrix(
         y_true,
         y_pred,
@@ -290,4 +346,30 @@ def plot_scores(df, scores, legends, sort_by, title):
         ax.tick_params(axis="y", which="both", length=0)
     fig = ax.get_figure()
     fig.savefig(os.path.join(results_path, "scores.png"), dpi=300, bbox_inches="tight")
+    plt.show()
+
+
+def plot_scores(df, scores, legends, sort_by, title):
+    with plt.style.context(["science", "grid"]):
+        ax = df.sort_values(by=sort_by).plot(kind="barh", x="Classifier", y=scores)
+        ax.set_title(title)
+        ax.set_xlabel("Score")
+        ax.set_ylabel("")
+        ax.legend(legends, loc="center left", bbox_to_anchor=(1.0, 0.15))
+        ax.tick_params(axis="y", which="both", length=0)
+    fig = ax.get_figure()
+    fig.savefig(os.path.join(results_path, "scores.png"), dpi=300, bbox_inches="tight")
+    plt.show()
+
+
+def plot_times(df, scores, legends, sort_by, title):
+    with plt.style.context(["science", "grid"]):
+        ax = df.sort_values(by=sort_by).plot(kind="barh", x="Classifier", y=scores)
+        ax.set_title(title)
+        ax.set_xlabel("Score")
+        ax.set_ylabel("")
+        ax.legend(legends, loc="center left", bbox_to_anchor=(1.0, 0.15))
+        ax.tick_params(axis="y", which="both", length=0)
+    fig = ax.get_figure()
+    fig.savefig(os.path.join(results_path, "times.png"), dpi=300, bbox_inches="tight")
     plt.show()

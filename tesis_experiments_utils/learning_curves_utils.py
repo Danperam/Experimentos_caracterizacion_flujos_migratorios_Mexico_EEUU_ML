@@ -1,10 +1,12 @@
 import os
+import time
 import numpy as np
 import pandas as pd
 import ast
 from tesis_experiments_utils.files_utils import (
     learning_curves_path,
     write_learning_curves_to_file,
+    write_learning_curves_times_to_file,
 )
 import matplotlib.pyplot as plt
 import scienceplots
@@ -36,6 +38,8 @@ def plot_and_save_learning_curve(
     n_jobs: int, número de trabajos en paralelo, por defecto -1
     pre_dispatch: int o str, número de trabajos generados para ser procesados paralelamente, por defecto 'all'
     """
+
+    start = time.time()
     train_size_abs, train_scores, validation_scores = learning_curve(
         clf,
         X,
@@ -46,6 +50,7 @@ def plot_and_save_learning_curve(
         n_jobs=n_jobs,
         pre_dispatch=pre_dispatch,
     )  # type: ignore
+    end = time.time()
 
     train_stds = []
     validation_stds = []
@@ -60,6 +65,13 @@ def plot_and_save_learning_curve(
             "Train_sizes": train_size_abs,
             "Train_scores": train_scores,
             "Validation_scores": validation_scores,
+        }
+    )
+
+    write_learning_curves_times_to_file(
+        {
+            "Classifier": name,
+            "time_s": end - start,
         }
     )
 

@@ -28,6 +28,17 @@ predictions_file = os.path.join(results_path, "predicciones.csv")
 # Ruta para el archivo de curvas de aprendizaje
 learning_curves_file = os.path.join(learning_curves_path, "curvas_de_aprendizaje.csv")
 
+# Ruta para el archivo de tiempos de ejecución
+execution_times_file = os.path.join(results_path, "execution_times.csv")
+
+# Ruta para el archivo de tiempos de validación cruzada
+cross_val_times_file = os.path.join(results_path, "cross_val_times.csv")
+
+# Ruta para el archivo de tiempos de curvas de aprendizaje
+learning_curves_times_file = os.path.join(
+    learning_curves_path, "learning_curves_times.csv"
+)
+
 
 # Función para configurar las rutas de los archivos
 
@@ -81,7 +92,7 @@ def create_results_file(multiclass=False):
         with open(results_file, "w") as file:
             if multiclass:
                 file.write(
-                "clasificador,clase,accuracy,balanced_accuracy,sensitivity,specificity,f1,mcc\n"
+                    "Classifier,clase,accuracy,balanced_accuracy,sensitivity,specificity,f1,mcc\n"
                 )
             else:
                 file.write(
@@ -89,6 +100,7 @@ def create_results_file(multiclass=False):
                 )
     print(f"Archivo de resultados creado en {results_file}")
     return results_file  # Devuelve la ruta del archivo de resultados
+
 
 def create_predictions_file():
     """Función para crear el archivo de predicciones"""
@@ -106,6 +118,35 @@ def create_learning_curves_file():
             file.write("Classifier,Train_sizes,Train_scores,Validation_scores\n")
     print(f"Archivo de curvas de aprendizaje creado en {learning_curves_file}")
     return learning_curves_file  # Devuelve la ruta del archivo de curvas de aprendizaje
+
+
+def create_execution_times_file():
+    """Función para crear el archivo de tiempos de ejecución"""
+    if not os.path.exists(execution_times_file):
+        with open(execution_times_file, "w") as file:
+            file.write("Classifier,training_s,testing_s\n")
+    print(f"Archivo de tiempos de ejecución creado en {execution_times_file}")
+    return execution_times_file  # Devuelve la ruta del archivo de tiempos de ejecución
+
+
+def create_cross_val_times_file():
+    """Función para crear el archivo de tiempos de validación cruzada"""
+    if not os.path.exists(cross_val_times_file):
+        with open(cross_val_times_file, "w") as file:
+            file.write("Classifier,time_s\n")
+    print(f"Archivo de tiempos de validación cruzada creado en {cross_val_times_file}")
+    return cross_val_times_file  # Devuelve la ruta del archivo de tiempos de validación cruzada
+
+
+def create_learning_curves_times_file():
+    """Función para crear el archivo de tiempos de curvas de aprendizaje"""
+    if not os.path.exists(learning_curves_times_file):
+        with open(learning_curves_times_file, "w") as file:
+            file.write("Classifier,time_s\n")
+    print(
+        f"Archivo de tiempos de curvas de aprendizaje creado en {learning_curves_times_file}"
+    )
+    return learning_curves_times_file  # Devuelve la ruta del archivo de tiempos de curvas de aprendizaje
 
 
 # ====================================================================================================
@@ -138,10 +179,10 @@ def write_results_to_file_multiclass(results, results_file=results_file):
     try:
         with open(results_file, "a") as file:
             file.write(
-                f"{results['clasificador']},{results['clase']},{results['accuracy']},{results['balanced_accuracy']},{results['sensitivity']},{results['specificity']},{results['f1']},{results['mcc']}\n"
+                f"{results['Classifier']},{results['clase']},{results['accuracy']},{results['balanced_accuracy']},{results['sensitivity']},{results['specificity']},{results['f1']},{results['mcc']}\n"
             )
         print(
-            f"Resultados del clasificador {results['clasificador']} almacenados en {results_file}"
+            f"Resultados del clasificador {results['Classifier']} almacenados en {results_file}"
         )
     except Exception as e:
         print(f"Error al escribir en el archivo: {e}")
@@ -199,5 +240,63 @@ def write_learning_curves_to_file(
             f"Curvas de aprendizaje del clasificador {learning_curve['Classifier']} almacenadas en {learning_curves_file}."
         )
 
+    except Exception as e:
+        print(f"Error al escribir en el archivo: {e}")
+
+
+def write_execution_times_to_file(
+    execution_time, execution_times_file=execution_times_file
+):
+    """Función para escribir los tiempos de ejecución de un clasificador en el archivo de tiempos de ejecución"""
+
+    if not os.path.exists(execution_times_file):
+        create_execution_times_file()
+
+    try:
+        with open(execution_times_file, "a") as file:
+            file.write(
+                f"{execution_time['Classifier']},{execution_time['training_s']},{execution_time['testing_s']}\n"
+            )
+        print(
+            f"Tiempo de ejecución del clasificador {execution_time['Classifier']} almacenado en {execution_times_file}"
+        )
+    except Exception as e:
+        print(f"Error al escribir en el archivo: {e}")
+
+
+def write_cross_val_times_to_file(
+    cross_val_time, cross_val_times_file=cross_val_times_file
+):
+    """Función para escribir los tiempos de validación cruzada de un clasificador en el archivo de tiempos de validación cruzada"""
+
+    if not os.path.exists(cross_val_times_file):
+        create_cross_val_times_file()
+
+    try:
+        with open(cross_val_times_file, "a") as file:
+            file.write(f"{cross_val_time['Classifier']},{cross_val_time['time_s']}\n")
+        print(
+            f"Tiempo de validación cruzada del clasificador {cross_val_time['Classifier']} almacenado en {cross_val_times_file}"
+        )
+    except Exception as e:
+        print(f"Error al escribir en el archivo: {e}")
+
+
+def write_learning_curves_times_to_file(
+    learning_curves_time, learning_curves_times_file=learning_curves_times_file
+):
+    """Función para escribir los tiempos de curvas de aprendizaje de un clasificador en el archivo de tiempos de curvas de aprendizaje"""
+
+    if not os.path.exists(learning_curves_times_file):
+        create_learning_curves_times_file()
+
+    try:
+        with open(learning_curves_times_file, "a") as file:
+            file.write(
+                f"{learning_curves_time['Classifier']},{learning_curves_time['time_s']}\n"
+            )
+        print(
+            f"Tiempo de curvas de aprendizaje del clasificador {learning_curves_time['Classifier']} almacenado en {learning_curves_times_file}"
+        )
     except Exception as e:
         print(f"Error al escribir en el archivo: {e}")
