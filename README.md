@@ -28,11 +28,13 @@ Se incluye una carpeta por experimento, dentro de las cuales se encuentran los J
 
 ## Instalación
 
+**Nota**: El proyecto fue implementado originalmente en Ubuntu Linux 24.04 y se recomienda seguir las instrucciones de instalación en este sistema operativo para evitar posibles problemas de compatibilidad.
+
 1. Clonar este repositorio:
 
    ```bash
-   git clone https://github.com/tu-usuario/nombre-del-repositorio.git
-   cd nombre-del-repositorio
+   git clone https://github.com/Danperam/Experimentos_caracterizacion_flujos_migratorios_Mexico_EEUU_ML
+   cd Experimentos_caracterizacion_flujos_migratorios_Mexico_EEUU_ML
    ```
 
 2. Crear el entorno Conda utilizando el archivo `environment.yml`:
@@ -54,8 +56,6 @@ Se incluye una carpeta por experimento, dentro de las cuales se encuentran los J
    ```bash
    conda list
    ```
-
-**Nota**: El proyecto fue implementado originalmente en Ubuntu Linux 24.04 y se recomienda seguir las instrucciones de instalación en este sistema operativo para evitar posibles problemas de compatibilidad.
 
 ## Uso
 
