@@ -78,11 +78,11 @@ Se incluye una carpeta por experimento, dentro de las cuales se encuentran los J
 ## Cómo citar
 Si utiliza información, código o figuras tomadas de este repositorio, cite la fuente de la siguiente manera:
 ``` 
-Pérez Ramírez, J. D. (2024). *Caracterización de flujos migratorios utilizando análisis espacio-temporal y aprendizaje de máquina*. Instituto Politécnico Nacional. Recuperado de https://github.com/Danperam/Experimentos_caracterizacion_flujos_migratorios_Mexico_EEUU_ML
+Pérez Ramírez, J. D. (2024). Caracterización de flujos migratorios utilizando análisis espacio-temporal y aprendizaje de máquina. Instituto Politécnico Nacional. Recuperado de https://github.com/Danperam/Experimentos_caracterizacion_flujos_migratorios_Mexico_EEUU_ML
 ```
 
 ## Declaración de Derechos de Autor
 
-El código su implementación y la información presentada en este repositorio son propiedad del Instituto Politécnico Nacional.
+El código, su implementación y la información presentada en este repositorio son propiedad del Instituto Politécnico Nacional.
 
 Los usuarios de la información no deben reproducir el contenido textual, gráficas o datos del trabajo sin el permiso expreso del autor y/o directores. Este puede ser obtenido escribiendo a las siguientes direcciones de correo: danprjs@gmail.com, mtorres@cic.ipn.mx, quintero@cic.ipn.mx. Si el permiso se otorga, el usuario deberá dar agradecimiento correspondiente y citar la fuente de este.
