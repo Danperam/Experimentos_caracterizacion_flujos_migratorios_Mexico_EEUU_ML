@@ -16,6 +16,7 @@ Se incluye una carpeta por experimento, dentro de las cuales se encuentran los J
 - **`nombre_experimento_limpieza_datos.ipynb`**: Incluye el código necesario para la selección de información relevante y la construcción del conjunto de datos para el experimento. El conjunto de datos generado se almacena en la carpeta **`datasets`**.
   - **NOTA**: para generar los conjuntos de datos, debe contar con los archivos fuente del [Mexican Migration Project (MMP)](https://mmp.opr.princeton.edu/). Póngase en contacto con el equipo del MMP para obtener más información.
 
+Además, en el repositorio se incluyen una carpeta y tres archivos adicionales:
 - **`datasets`**: Carpeta en la que se almacenan los conjuntos de datos a utilizar. Se incluyen los conjuntos con los que se obtuvieron los resultados reportados.
 - **`tesis_experiments_utils`**: Scripts que contienen funciones que implementan diversas tareas para el entrenamiento y prueba de modelos además de la generación y almacenamiento de archivos, curvas de aprendizaje y matrices de confusión.
 - **`environment.yml`**: Archivo para reproducir el entorno experimental de Conda.
