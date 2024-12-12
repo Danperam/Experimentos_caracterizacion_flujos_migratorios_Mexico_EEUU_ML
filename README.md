@@ -27,7 +27,7 @@ Además, en el repositorio se incluyen dos carpetas y dos archivos adicionales:
 - [Miniconda](https://docs.conda.io/en/latest/miniconda.html) o [Anaconda](https://www.anaconda.com/).
 - Python 3.9 o superior.
 
-## Instalación
+## Descarga y creación del entorno experimental
 
 **Nota**: El proyecto fue implementado originalmente en Ubuntu Linux 24.04 y se recomienda seguir las instrucciones de instalación en este sistema operativo para evitar posibles problemas de compatibilidad.
 
