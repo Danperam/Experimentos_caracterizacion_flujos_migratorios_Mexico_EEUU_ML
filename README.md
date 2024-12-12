@@ -17,8 +17,8 @@ Se incluye una carpeta por experimento, dentro de las cuales se encuentran los J
   - **NOTA**: para generar los conjuntos de datos, debe contar con los archivos fuente del [Mexican Migration Project (MMP)](https://mmp.opr.princeton.edu/). Póngase en contacto con el equipo del MMP para obtener más información.
 
 Además, en el repositorio se incluyen dos carpetas y dos archivos adicionales:
-- **`datasets`**: Carpeta en la que se almacenan los conjuntos de datos a utilizar. Se incluyen los conjuntos con los que se obtuvieron los resultados reportados.
-- **`tesis_experiments_utils`**: Scripts que contienen funciones que implementan diversas tareas para el entrenamiento y prueba de modelos además de la generación y almacenamiento de archivos, curvas de aprendizaje y matrices de confusión.
+- **`datasets/`**: Carpeta en la que se almacenan los conjuntos de datos a utilizar. Se incluyen los conjuntos con los que se obtuvieron los resultados reportados.
+- **`tesis_experiments_utils/`**: Scripts que contienen funciones que implementan diversas tareas para el entrenamiento y prueba de modelos además de la generación y almacenamiento de archivos, curvas de aprendizaje y matrices de confusión.
 - **`environment.yml`**: Archivo para reproducir el entorno experimental de Conda.
 - **`README.md`**: Archivo de documentación del repositorio.
 
